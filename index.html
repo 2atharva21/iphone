@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes, viewport-fit=cover, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Calculator">
     <meta name="theme-color" content="#000000">
     <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta name="supported-color-schemes" content="light dark">
+    <meta name="color-scheme" content="light dark">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23000' width='180' height='180'/><text x='50%' y='50%' font-size='80' fill='%23fff' text-anchor='middle' dominant-baseline='middle' font-weight='bold'>=</text></svg>">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>iPhone Calculator</title>
     <style>
         :root {
@@ -46,16 +48,14 @@
             justify-content: center;
             align-items: center;
             min-height: 100dvh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            position: relative;
             padding: 0;
             touch-action: manipulation;
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Dark Theme */
@@ -106,7 +106,7 @@
             width: 100%;
             height: 100%;
             max-width: 100%;
-            max-height: 100%;
+            max-height: 100dvh;
             display: flex;
             flex-direction: column;
             background: var(--bg-primary);
@@ -125,6 +125,16 @@
             .phone-container {
                 width: 100%;
                 max-width: 100%;
+                aspect-ratio: auto;
+                height: 100%;
+            }
+        }
+
+        /* Extra small screens (320px and below) */
+        @media (max-width: 360px) {
+            .phone-container {
+                height: 100%;
+                min-height: 100dvh;
             }
         }
 
@@ -149,7 +159,7 @@
         }
 
         /* Tablet landscape */
-        @media (min-width: 1025px) and (orientation: landscape) {
+        @media (min-width: 768px) and (orientation: landscape) {
             .phone-container {
                 width: 50%;
                 max-width: 400px;
@@ -183,11 +193,11 @@
         /* Status Bar */
         .status-bar {
             background: var(--bg-primary);
-            padding: max(14px, var(--safe-area-inset-top)) max(24px, var(--safe-area-inset-right)) 8px max(24px, var(--safe-area-inset-left));
+            padding: max(12px, var(--safe-area-inset-top)) max(18px, var(--safe-area-inset-right)) 6px max(18px, var(--safe-area-inset-left));
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: clamp(12px, 2.5vw, 14px);
+            font-size: clamp(11px, 2.2vw, 14px);
             font-weight: 600;
             color: var(--status-text);
             border-bottom: 1px solid rgba(100, 100, 100, 0.2);
@@ -199,13 +209,22 @@
 
         .status-left, .status-right {
             display: flex;
-            gap: 6px;
+            gap: clamp(3px, 1vw, 6px);
             align-items: center;
+            font-size: clamp(10px, 2vw, 14px);
         }
 
         .status-center {
-            font-size: 15px;
-            letter-spacing: 0.5px;
+            font-size: clamp(12px, 2vw, 15px);
+            letter-spacing: 0.3px;
+        }
+
+        /* Ultra small screens */
+        @media (max-width: 360px) {
+            .status-bar {
+                padding: max(10px, var(--safe-area-inset-top)) max(14px, var(--safe-area-inset-right)) 4px max(14px, var(--safe-area-inset-left));
+                font-size: 10px;
+            }
         }
 
         /* Screen Content */
@@ -300,15 +319,17 @@
         /* Display - Responsive */
         .display {
             background: var(--bg-primary);
-            padding: clamp(16px, 4vw, 24px);
+            padding: clamp(12px, 3vw, 24px);
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            min-height: clamp(100px, 20vh, 150px);
+            min-height: clamp(80px, 18vh, 150px);
+            max-height: clamp(100px, 25vh, 200px);
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 -1px 3px rgba(255, 255, 255, 0.05);
             border-radius: clamp(8px, 2vw, 12px);
             position: relative;
+            overflow: hidden;
         }
 
         .display::after {
@@ -324,22 +345,22 @@
 
         .display-prev {
             color: var(--text-secondary);
-            font-size: clamp(14px, 3vw, 20px);
+            font-size: clamp(12px, 2.5vw, 20px);
             font-weight: 400;
-            min-height: 24px;
+            min-height: 20px;
             word-wrap: break-word;
             word-break: break-all;
             text-align: right;
-            margin-bottom: clamp(4px, 1vw, 12px);
+            margin-bottom: clamp(2px, 0.5vw, 8px);
             opacity: 0.8;
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .display-current {
             color: var(--text-primary);
-            font-size: clamp(36px, 12vw, 64px);
+            font-size: clamp(32px, 10vw, 64px);
             font-weight: 300;
-            min-height: clamp(44px, 15vw, 80px);
+            min-height: clamp(40px, 12vw, 80px);
             word-wrap: break-word;
             word-break: break-all;
             text-align: right;
@@ -368,148 +389,69 @@
             }
         }
 
+        /* Ultra small screens (320px and below) */
+        @media (max-width: 360px) {
+            .display {
+                min-height: 70px;
+                padding: 10px 12px;
+            }
+
+            .display-current {
+                font-size: 32px;
+                min-height: 40px;
+            }
+
+            .display-prev {
+                font-size: 12px;
+                min-height: 16px;
+            }
+        }
+
         /* Small mobile (≤480px) */
         @media (max-width: 480px) {
             .display-current {
-                font-size: 44px;
-                min-height: 55px;
+                font-size: 42px;
+                min-height: 50px;
+            }
+
+            .display-prev {
+                font-size: 15px;
             }
         }
 
         /* Buttons Container - Responsive */
         .buttons-container {
-            padding: clamp(12px, 3vw, 24px);
+            padding: clamp(10px, 2.5vw, 18px);
             flex-shrink: 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            -webkit-scroll-behavior: smooth;
+            scroll-behavior: smooth;
+            max-height: 50vh;
         }
 
-        .mode-toggle {
-            display: flex;
-            justify-content: space-between;
-            gap: clamp(8px, 2vw, 12px);
-            margin-bottom: clamp(12px, 2vw, 16px);
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: clamp(6px, 1.5vw, 10px);
-            background: var(--btn-control);
-            color: #000;
-            border: none;
-            border-radius: clamp(10px, 2vw, 14px);
-            font-size: clamp(10px, 2vw, 13px);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-            opacity: 0.6;
-            min-height: 36px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .mode-btn:active {
-            transform: scale(0.94);
-        }
-
-        .mode-btn.active {
-            opacity: 1;
-            background: var(--btn-operator);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
-            animation: modeSwitch 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        @keyframes modeSwitch {
-            0% {
-                opacity: 0.6;
-                transform: scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
+        /* Button Grid - 4 columns */
         .buttons-grid {
             display: grid;
-            gap: clamp(8px, 2vw, 14px);
-        }
-
-        /* Basic Mode - 4 columns */
-        .buttons-grid.basic {
             grid-template-columns: repeat(4, 1fr);
-        }
-
-        /* Scientific Mode - 7 columns */
-        .buttons-grid.scientific {
-            grid-template-columns: repeat(7, 1fr);
-            gap: clamp(6px, 1.5vw, 10px);
-            display: none;
-        }
-
-        .buttons-grid.scientific.show {
-            display: grid;
-        }
-
-        .buttons-grid.basic.hide {
-            display: none;
-        }
-
-        .scientific {
-            display: none;
-        }
-
-        /* Portrait orientation - scientific mode hidden */
-        @media (orientation: portrait) {
-            .buttons-grid.scientific {
-                display: none !important;
-            }
-            .mode-toggle {
-                display: flex !important;
-            }
-        }
-
-        /* Landscape auto-show scientific */
-        @media (orientation: landscape) and (min-height: 400px) {
-            .buttons-grid.basic {
-                display: none;
-            }
-            .buttons-grid.scientific {
-                display: grid;
-            }
-            .mode-toggle {
-                display: flex;
-            }
-            .phone-container {
-                aspect-ratio: 19.5 / 9;
-            }
-            .display {
-                min-height: clamp(60px, 15vh, 100px);
-                padding: clamp(12px, 2vw, 16px);
-            }
-            .display-current {
-                font-size: clamp(28px, 8vw, 44px);
-                min-height: clamp(35px, 10vh, 55px);
-            }
-            .display-prev {
-                font-size: clamp(12px, 2.5vw, 16px);
-            }
+            gap: clamp(6px, 1.5vw, 14px);
+            width: 100%;
         }
 
         /* Button Styles - Touch Optimized & Perfectly Circular */
         button {
             border: none;
             border-radius: 50%;
-            font-size: clamp(16px, 4vw, 20px);
+            font-size: clamp(14px, 3.5vw, 20px);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
             outline: none;
             position: relative;
             overflow: hidden;
-            min-height: 44px;
-            min-width: 44px;
+            min-height: clamp(42px, 11vw, 56px);
+            min-width: clamp(42px, 11vw, 56px);
             aspect-ratio: 1;
             display: flex;
             align-items: center;
@@ -519,6 +461,42 @@
             touch-action: manipulation;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             will-change: transform, background-color, box-shadow;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ultra small screens */
+        @media (max-width: 360px) {
+            button {
+                min-height: 40px;
+                min-width: 40px;
+                font-size: 13px;
+            }
+
+            .buttons-container {
+                padding: 8px;
+            }
+
+            .buttons-grid {
+                gap: 5px;
+            }
+        }
+
+        /* Small mobile (≤480px) */
+        @media (max-width: 480px) {
+            .buttons-container {
+                padding: 12px;
+            }
+
+            button {
+                font-size: 15px;
+                min-height: 48px;
+                min-width: 48px;
+            }
+
+            .buttons-grid {
+                gap: 10px;
+            }
         }
 
         button::before {
@@ -685,37 +663,7 @@
             grid-column: span 1;
         }
 
-        .btn-scientific {
-            background: var(--btn-control);
-            color: #000;
-            padding: 0;
-            font-size: clamp(11px, 2vw, 13px);
-            font-weight: 500;
-            border-radius: 50%;
-            aspect-ratio: 1;
-            min-height: 40px;
-            min-width: 40px;
-            backdrop-filter: blur(10px) saturate(80%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
 
-        body.light-theme .btn-scientific {
-            background: rgba(170, 170, 170, 0.5);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        body.dark-theme .btn-scientific {
-            background: #a5a5a5;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-scientific:active {
-            background: var(--btn-control-active);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-            transform: scale(0.93);
-            animation: buttonBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
 
         /* Control Panel */
         .control-panel {
@@ -789,54 +737,266 @@
             }
         }
 
-        /* Small mobile (≤480px) */
-        @media (max-width: 480px) {
+        /* Extra small mobile (≤360px) */
+        @media (max-width: 360px) {
             .phone-container {
-                border-radius: 24px;
-                border-width: 10px;
+                border-radius: 0;
+                border-width: 0;
             }
 
             .display {
-                padding: 14px 18px;
-            }
-
-            .display-current {
-                font-size: 42px;
-                min-height: 52px;
-            }
-
-            .display-prev {
-                font-size: 16px;
+                padding: 10px 12px;
             }
 
             .buttons-container {
-                padding: 14px;
+                padding: 8px;
             }
 
             button {
-                font-size: 16px;
-                min-height: 48px;
+                font-size: 13px;
+                min-height: 40px;
             }
 
-            .btn-number, .btn-operator, .btn-control, .btn-equals {
-                padding: 14px;
-            }
-
-            .buttons-grid.basic {
-                gap: 10px;
+            .buttons-grid {
+                gap: 5px;
             }
         }
 
-        /* Large mobile (481px - 768px) */
-        @media (min-width: 481px) and (max-width: 768px) {
-            .buttons-grid.basic {
+        /* Small mobile (361px - 480px) */
+        @media (min-width: 361px) and (max-width: 480px) {
+            .phone-container {
+                border-radius: 0;
+                border-width: 0;
+            }
+
+            .display {
+                padding: 12px 14px;
+                min-height: 80px;
+            }
+
+            .display-current {
+                font-size: 40px;
+                min-height: 50px;
+            }
+
+            .display-prev {
+                font-size: 14px;
+            }
+
+            .buttons-container {
+                padding: 10px;
+            }
+
+            button {
+                font-size: 15px;
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .buttons-grid {
+                gap: 8px;
+            }
+        }
+
+        /* Medium mobile (481px - 600px) */
+        @media (min-width: 481px) and (max-width: 600px) {
+            .buttons-grid {
+                gap: 10px;
+            }
+
+            button {
+                min-height: 48px;
+            }
+        }
+
+        /* Large mobile (601px - 768px) */
+        @media (min-width: 601px) and (max-width: 768px) {
+            .buttons-grid {
                 gap: 11px;
+            }
+
+            button {
+                min-height: 50px;
+            }
+        }
+
+        /* Tablet (769px - 1024px) */
+        @media (min-width: 769px) {
+            button {
+                min-height: 52px;
+            }
+        }
+
+        /* Landscape orientation - Mobile (≤800px) */
+        @media (orientation: landscape) and (max-width: 800px) {
+            .display {
+                min-height: 50px;
+                padding: 10px 12px;
+            }
+
+            .display-current {
+                font-size: 28px;
+                min-height: 35px;
+            }
+
+            .display-prev {
+                font-size: 12px;
+            }
+
+            .buttons-container {
+                padding: 8px;
+                max-height: 60vh;
+            }
+
+            button {
+                min-height: 36px;
+                min-width: 36px;
+                font-size: 13px;
+            }
+
+            .buttons-grid {
+                gap: 6px;
+            }
+
+            .phone-container {
+                aspect-ratio: auto;
+                height: 100dvh;
+            }
+        }
+
+        /* Landscape orientation - Improved for small landscape */
+        @media (orientation: landscape) and (max-height: 400px) {
+            .display {
+                min-height: 40px;
+                padding: 8px 10px;
+            }
+
+            .display-current {
+                font-size: 24px;
+                min-height: 30px;
+            }
+
+            button {
+                min-height: 32px;
+                min-width: 32px;
+                font-size: 12px;
             }
         }
 
         /* Prevent double-tap zoom */
         input, button {
             font-size: 16px;
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            html, body {
+                height: 100%;
+                height: 100dvh;
+                height: 100vh;
+            }
+
+            body {
+                position: relative;
+            }
+
+            .phone-container {
+                height: 100%;
+                height: 100dvh;
+                height: 100vh;
+            }
+        }
+
+        /* Android Chrome specific optimizations */
+        @media (pointer: coarse) {
+            button {
+                min-height: clamp(42px, 11vw, 56px);
+                min-width: clamp(42px, 11vw, 56px);
+            }
+
+            .buttons-container {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Firefox mobile optimizations */
+        @-moz-document url-prefix() {
+            .phone-container {
+                overflow: -moz-scrollbars-vertical;
+            }
+
+            body {
+                max-height: 100dvh;
+            }
+        }
+
+        /* Enhanced safe area handling for devices with notches */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(0px, env(safe-area-inset-left));
+                padding-right: max(0px, env(safe-area-inset-right));
+                padding-top: max(0px, env(safe-area-inset-top));
+                padding-bottom: max(0px, env(safe-area-inset-bottom));
+            }
+
+            .phone-container {
+                margin-left: -max(0px, env(safe-area-inset-left));
+                margin-right: -max(0px, env(safe-area-inset-right));
+                margin-top: -max(0px, env(safe-area-inset-top));
+                margin-bottom: -max(0px, env(safe-area-inset-bottom));
+            }
+        }
+
+        /* Fixes for input focus zoom on iOS */
+        input, textarea, select, button {
+            font-size: 16px !important;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* Smooth scrolling for history panel on mobile */
+        .history-panel {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* High DPI screen optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            button {
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        /* Dark mode support for system preference */
+        @media (prefers-color-scheme: light) {
+            body.dark-theme {
+                --bg-primary: #f8f8f8;
+                --bg-secondary: #fff;
+                --text-primary: #000;
+                --text-secondary: #555;
+            }
+        }
+
+        /* Very large screens - tablet/desktop */
+        @media (min-width: 900px) {
+            .buttons-grid {
+                gap: 12px;
+            }
+
+            button {
+                min-height: 56px;
+                min-width: 56px;
+                font-size: 18px;
+            }
+
+            .display {
+                padding: 20px 24px;
+                min-height: 140px;
+            }
+
+            .display-current {
+                font-size: 64px;
+                min-height: 80px;
+            }
         }
     </style>
 </head>
@@ -853,10 +1013,10 @@
         </div>
 
         <!-- Icons Row -->
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; flex-shrink: 0;">
-            <button style="border: 1px solid rgba(255,255,255,0.3); width: 44px; height: 44px; padding: 0; font-size: 18px; margin: 0;" onclick="this.onclick=function(){};return false;">☰</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px); flex-shrink: 0; gap: clamp(8px, 1.5vw, 12px);">
+            <button style="border: 1px solid rgba(255,255,255,0.3); width: clamp(40px, 8vw, 44px); height: clamp(40px, 8vw, 44px); padding: 0; font-size: 16px; margin: 0; border-radius: 8px;" onclick="this.onclick=function(){};return false;">☰</button>
             <div></div>
-            <button id="themeToggle" style="border: 1px solid rgba(255,255,255,0.3); width: 44px; height: 44px; padding: 0; font-size: 18px; margin: 0; background: transparent; color: var(--text-primary); cursor: pointer; transition: all 0.3s ease;" onclick="toggleTheme()">🌙</button>
+            <button id="themeToggle" style="border: 1px solid rgba(255,255,255,0.3); width: clamp(40px, 8vw, 44px); height: clamp(40px, 8vw, 44px); padding: 0; font-size: 16px; margin: 0; background: transparent; color: var(--text-primary); cursor: pointer; transition: all 0.3s ease; border-radius: 8px;" onclick="toggleTheme()">🌙</button>
         </div>
 
         <!-- Main Screen -->
@@ -871,14 +1031,8 @@
 
         <!-- Buttons Container -->
         <div class="buttons-container">
-            <!-- Mode Toggle -->
-            <div class="mode-toggle">
-                <button class="mode-btn active" onclick="switchMode('basic')">Basic</button>
-                <button class="mode-btn" onclick="switchMode('scientific')">Scientific</button>
-            </div>
-
-            <!-- Button Grid - Basic Mode Only -->
-            <div class="buttons-grid basic">
+            <!-- Button Grid -->
+            <div class="buttons-grid">
                 <button class="btn-control" onclick="calculator.delete()">⌫</button>
                 <button class="btn-control" onclick="calculator.clear()">AC</button>
                 <button class="btn-control" onclick="calculator.chooseOperation('%')">%</button>
@@ -903,47 +1057,6 @@
                 <button class="btn-number" onclick="calculator.appendNumber('0')">0</button>
                 <button class="btn-number" onclick="calculator.appendNumber('.')">.</button>
                 <button class="btn-operator" onclick="calculator.compute()">=</button>
-            </div>
-
-            <!-- Scientific Grid -->
-            <div class="buttons-grid scientific">
-                <button class="btn-control" onclick="calculator.delete()">⌫</button>
-                <button class="btn-control" onclick="calculator.clear()">AC</button>
-                <button class="btn-control" onclick="calculator.chooseOperation('%')">%</button>
-                <button class="btn-operator" onclick="calculator.chooseOperation('÷')">÷</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('sin')">sin</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('cos')">cos</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('tan')">tan</button>
-
-                <button class="btn-number" onclick="calculator.appendNumber('7')">7</button>
-                <button class="btn-number" onclick="calculator.appendNumber('8')">8</button>
-                <button class="btn-number" onclick="calculator.appendNumber('9')">9</button>
-                <button class="btn-operator" onclick="calculator.chooseOperation('×')">×</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('log')">log</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('ln')">ln</button>
-                <button class="btn-scientific" onclick="calculator.appendNumber(Math.PI.toString().slice(0,5))">π</button>
-
-                <button class="btn-number" onclick="calculator.appendNumber('4')">4</button>
-                <button class="btn-number" onclick="calculator.appendNumber('5')">5</button>
-                <button class="btn-number" onclick="calculator.appendNumber('6')">6</button>
-                <button class="btn-operator" onclick="calculator.chooseOperation('-')">−</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('sqrt')">√</button>
-                <button class="btn-scientific" onclick="calculator.appendNumber(Math.E.toString().slice(0,5))">e</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('pow2')">x²</button>
-
-                <button class="btn-number" onclick="calculator.appendNumber('1')">1</button>
-                <button class="btn-number" onclick="calculator.appendNumber('2')">2</button>
-                <button class="btn-number" onclick="calculator.appendNumber('3')">3</button>
-                <button class="btn-operator" onclick="calculator.chooseOperation('+')">+</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('reciprocal')">1/x</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('factorial')">n!</button>
-                <button class="btn-scientific" onclick="calculator.appendFunction('pow3')">x³</button>
-
-                <button class="btn-control" onclick="calculator.toggleSign()">+/−</button>
-                <button class="btn-number" onclick="calculator.appendNumber('0')">0</button>
-                <button class="btn-number" onclick="calculator.appendNumber('.')">.</button>
-                <button class="btn-operator" onclick="calculator.compute()">=</button>
-                <button class="btn-scientific" colspan-span="3" style="grid-column: span 3;">Ans</button>
             </div>
         </div>
 
@@ -988,27 +1101,7 @@
         // Initialize theme on load
         initTheme();
 
-        // ========== MODE SWITCHING ==========
-        let currentMode = 'basic';
 
-        function switchMode(mode) {
-            currentMode = mode;
-            const basicGrid = document.querySelector('.buttons-grid.basic');
-            const scientificGrid = document.querySelector('.buttons-grid.scientific');
-            const modeBtns = document.querySelectorAll('.mode-btn');
-
-            if (mode === 'basic') {
-                basicGrid.classList.remove('hide');
-                scientificGrid.classList.remove('show');
-                modeBtns[0].classList.add('active');
-                modeBtns[1].classList.remove('active');
-            } else {
-                basicGrid.classList.add('hide');
-                scientificGrid.classList.add('show');
-                modeBtns[0].classList.remove('active');
-                modeBtns[1].classList.add('active');
-            }
-        }
 
         // ========== HISTORY PANEL MANAGEMENT ==========
         function updateHistoryPanel() {
@@ -1062,36 +1155,7 @@
                 this.updateDisplay();
             }
 
-            appendFunction(func) {
-                const current = parseFloat(this.currentOperand) || this.lastAnswer;
-                let result;
-                
-                switch(func) {
-                    case 'sin': result = Math.sin(current * Math.PI / 180); break;
-                    case 'cos': result = Math.cos(current * Math.PI / 180); break;
-                    case 'tan': result = Math.tan(current * Math.PI / 180); break;
-                    case 'log': result = Math.log10(current); break;
-                    case 'ln': result = Math.log(current); break;
-                    case 'sqrt': result = Math.sqrt(current); break;
-                    case 'pow2': result = current * current; break;
-                    case 'pow3': result = current * current * current; break;
-                    case 'reciprocal': result = current !== 0 ? 1 / current : 0; break;
-                    case 'factorial': result = this.factorial(Math.floor(current)); break;
-                    default: return;
-                }
-                
-                this.currentOperand = this.formatNumber(result);
-                this.lastAnswer = result;
-                this.updateDisplay();
-            }
 
-            factorial(n) {
-                if (n < 0) return NaN;
-                if (n === 0 || n === 1) return 1;
-                let result = 1;
-                for (let i = 2; i <= n; i++) result *= i;
-                return result;
-            }
 
             delete() {
                 this.currentOperand = this.currentOperand.toString().slice(0, -1);
